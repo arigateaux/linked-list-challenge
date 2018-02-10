@@ -4,42 +4,51 @@ import java.util.LinkedList;
 
 public class Album {
 
-    private LinkedList<Song> songList;
     private String albumName;
-    private String songTitle;
-    private int duration;
+    private String artistName;
+    private LinkedList<Song> songList;
 
-    public Album(String albumName) {
-        songList = new LinkedList<Song>();
+    public Album(String albumName, String artistName) {
+        this.songList = new LinkedList<Song>();
         this.albumName = albumName;
+        this.artistName = artistName;
     }
 
-    public boolean addSongToAlbum(String albumName, String songTitle, int duration) {
-        if (findSong(albumName, songTitle) != null) {
-            songList.add(new Song(songTitle, duration));
+    public boolean addSong(String songTitle, int duration) {
+        if (findSong(songTitle) == null) {
+            this.songList.add(new Song(songTitle, duration));
             return true;
         }
         return false;
     }
 
-    private Song findSong(String albumName, String songTitle) {
-        for (int i = 0; i <= songList.size(); i++) {
-            Song currentSong = songList.get(i);
-            if (currentSong.getTitle().equals(songTitle))
-                return currentSong;
+    private Song findSong(String songTitle) {
+        for (Song getSong : this.songList) {
+            if (getSong.getTitle().equals(songTitle)) {
+                return getSong;
+            }
         }
         return null;
     }
 
-    public String getAlbumName() {
-        return albumName;
+    public boolean addToPlaylist(int trackNumber, LinkedList<Song> playlist) {
+        int index = trackNumber - 1;
+        if ((index >= 0) && (index <= this.songList.size())) {
+            playlist.add(this.songList.get(index));
+            return true;
+        }
+        System.out.println("This album does not have a track " + trackNumber);
+        return false;
     }
 
-    public String getSongTitle() {
-        return songTitle;
+    public boolean addToPlaylist(String title, LinkedList<Song> playlist) {
+        Song getSong = findSong(title);
+        if (getSong != null) {
+            playlist.add(getSong);
+            return true;
+        }
+        System.out.println("The song " + title + " is not in this album");
+        return false;
     }
 
-    public int getDuration() {
-        return duration;
-    }
 }
